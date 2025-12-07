@@ -1,11 +1,17 @@
 {
   "compilerOptions": {
     "rootDir": ".",
+    "baseUrl": ".",
     "outDir": "./dist",
     "module": "commonjs",
     "target": "esnext",
-    "lib": ["esnext", "DOM"],
-    "types": ["node"],
+    "lib": [
+      "esnext",
+      "DOM"
+    ],
+    "types": [
+      "node"
+    ],
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "emitDecoratorMetadata": true,
@@ -16,11 +22,17 @@
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
   },
   "exclude": [],
   "references": [
-    { "path": "./tsconfig.build.json" },
-    { "path": "./tsconfig.test.json" }
+    {
+      "path": "./tsconfig.build.json"
+    },
+    {
+      "path": "./tsconfig.test.json"
+    }
   ]
 }
