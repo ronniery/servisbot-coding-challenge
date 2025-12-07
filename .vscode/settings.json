@@ -1,0 +1,10 @@
+{
+  "editor.formatOnSave": true,
+  "explorer.fileNesting.expand": true,
+  "editor.inlineSuggest.edits.showCollapsed": true,
+  "typescript.inlayHints.enumMemberValues.enabled": true,
+  "typescript.inlayHints.variableTypes.enabled": true,
+  "typescript.inlayHints.parameterNames.enabled": "all",
+  "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
+  "explorer.fileNesting.enabled": true,
+}
