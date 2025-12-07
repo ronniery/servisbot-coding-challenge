@@ -1,7 +1,6 @@
 import fs from 'fs'
 import { faker } from '@faker-js/faker';
 import moment from 'moment';
-import path from 'path';
 
 const botNames = [
   'Bot One',
@@ -64,29 +63,17 @@ const createLogs = () => ({
 const writeBots = () => {  
   const bots = faker.helpers.multiple(createBot, { count: 3 });
   const jsonString = JSON.stringify(bots, null, 2);
-  fs.writeFile(path.join(__dirname, 'data', './backend/data/bots.json'), jsonString, () => console.log('Bots Written'));
+  fs.writeFile('bots.json', jsonString, () => console.log('Bots Written'));
 }
 
 const writeWorkers = () => {
   const workers = faker.helpers.multiple(createWorker, { count: 12 });
   const jsonString = JSON.stringify(workers, null, 2);
-  fs.writeFile(path.join(__dirname, 'data', './backend/data/workers.json'), jsonString, () => console.log('Workers Written'));
+  fs.writeFile('workers.json', jsonString, () => console.log('Workers Written'));
 }
 
 const writeLogs = () => {
   const logs = faker.helpers.multiple(createLogs, { count: 2000 });
   const jsonString = JSON.stringify(logs, null, 2);
-  fs.writeFile( path.join(__dirname, 'data', './backend/data/logs.json'), jsonString, () => console.log('Logs Written'));
+  fs.writeFile('logs.json', jsonString, () => console.log('Logs Written'));
 }
-
-function create() {
-  writeBots();
-  writeWorkers();
-  writeLogs();
-}
-
-if (require.main === module) {
-  create();
-}
-
-export default create;
