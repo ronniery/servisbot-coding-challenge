@@ -1,7 +1,9 @@
 import type { DataStore } from '../utils';
 import type { Log } from './log';
 
-export class Worker {
+import { Worker as IWorker } from '@packages/shared';
+
+export class Worker implements IWorker {
   public static datastore: DataStore;
   public readonly id: string;
   public readonly created: number;
@@ -20,6 +22,8 @@ export class Worker {
   }
 
   public static getLogs(workerId: string): Log[] {
-    return Object.values(this.datastore.logsById).filter((log: Log) => log.worker === workerId);
+    return Object.values(this.datastore.logsById)
+      .filter((log: Log) => log.worker === workerId)
+      .sort((prev, next) => prev.created - next.created);
   }
 }

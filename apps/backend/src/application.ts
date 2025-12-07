@@ -69,6 +69,7 @@ export class Application {
       shutdownPromises.push(
         new Promise<void>((resolve) => {
           logger.debug('Closing API server...');
+
           this.apiServer!.close(() => {
             logger.info('API server closed');
             resolve();
@@ -81,6 +82,7 @@ export class Application {
       shutdownPromises.push(
         new Promise<void>((resolve) => {
           logger.debug('Closing health check server...');
+
           this.healthServer!.close(() => {
             logger.info('Health check server closed');
             resolve();
@@ -113,7 +115,7 @@ export class Application {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
-    logger.debug('Registering bot controller routes at /bots');
+    logger.debug('Registering bot controller routes at /');
     app.use('/', this.controller.getRouter());
 
     // Error handling middlewares
@@ -135,6 +137,7 @@ export class Application {
         res.status(503).send('Service Unavailable');
         return;
       }
+
       logger.debug('Health check endpoint hit');
       res.status(200).send('OK');
     });

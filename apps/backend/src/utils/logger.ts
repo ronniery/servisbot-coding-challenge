@@ -2,7 +2,11 @@ import winston from 'winston';
 
 const { combine, colorize, timestamp, printf, errors, splat } = winston.format;
 
-const logStack = printf(({ level, message, timestamp, stack }) => {
+const logStack = printf((info: winston.Logform.TransformableInfo) => {
+  const { level, message } = info;
+  const timestamp = info.timestamp as string;
+  const stack = info.stack as string | undefined;
+
   return stack
     ? `[${timestamp}] ${level}: ${message}\n${stack}`
     : `[${timestamp}] ${level}: ${message}`;
@@ -21,5 +25,5 @@ export const logger = winston.createLogger({
 });
 
 if (process.env.NODE_ENV === 'test') {
-  logger.transports.forEach((transport) => (transport.silent = true));
+  logger.transports.forEach((transport: winston.transport) => (transport.silent = true));
 }

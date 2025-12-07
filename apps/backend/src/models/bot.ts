@@ -1,14 +1,11 @@
 import { DataStore } from '../utils/provider/datastore';
 import type { Log } from './log';
 import type { Worker } from './worker';
+import { Bot as IBot, BotStatus } from '@packages/shared';
 
-export enum BotStatus {
-  DISABLED = 'DISABLED',
-  ENABLED = 'ENABLED',
-  PAUSED = 'PAUSED',
-}
+export { BotStatus };
 
-export class Bot {
+export class Bot implements IBot {
   public static datastore: DataStore;
   public readonly id: string;
   public readonly created: number;
@@ -41,6 +38,8 @@ export class Bot {
   }
 
   public static getLogs(botId: string): Log[] {
-    return Object.values(this.datastore.logsById).filter((log: Log) => log.bot === botId);
+    return Object.values(this.datastore.logsById)
+      .filter((log: Log) => log.bot === botId)
+      .sort((a, b) => a.created - b.created);
   }
 }

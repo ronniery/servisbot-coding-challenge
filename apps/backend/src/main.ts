@@ -1,4 +1,5 @@
 import 'dotenv/config';
+
 import { logger } from './utils';
 import { createApp } from './factory';
 import { Application } from './application';

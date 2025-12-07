@@ -1,6 +1,8 @@
 import { DataStore } from '../utils/provider/datastore';
 
-export class Log {
+import { Log as ILog } from '@packages/shared';
+
+export class Log implements ILog {
   public static datastore: DataStore;
   public readonly id: string;
   public readonly created: number;

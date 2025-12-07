@@ -1,4 +1,4 @@
-import type { PaginationParams, PaginatedResponse } from '../types';
+import type { PaginationParams, PaginatedResponse } from '@packages/shared';
 
 import { logger, paginate, DataStore } from '../utils';
 import { Bot, Worker, type Log } from '../models';

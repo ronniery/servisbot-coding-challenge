@@ -1,4 +1,4 @@
-import type { PaginationParams, PaginatedResponse } from '../types';
+import type { PaginationParams, PaginatedResponse } from '@packages/shared';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;

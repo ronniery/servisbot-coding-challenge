@@ -1,7 +1,7 @@
 import express, { type Request, type Response, type Router as ExpressRouter } from 'express';
 import Router = express;
 
-import type { PaginatedResponse, PaginationParams } from '../types';
+import type { PaginatedResponse, PaginationParams } from '@packages/shared';
 import { Bot, Worker, Log } from '../models';
 import { BotService } from '../services';
 import { logger } from '../utils';
