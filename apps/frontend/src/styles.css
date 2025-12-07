@@ -1,0 +1,218 @@
+:root {
+  --color-primary: #007bff;
+  --color-secondary: #6c757d;
+  --color-success: #28a745;
+  --color-danger: #dc3545;
+  --color-background: #f8f9fa;
+  --color-surface: #ffffff;
+  --color-border: #e9ecef;
+}
+
+body {
+  background-color: var(--color-background);
+  font-family: sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+/* --- Container e Header Principal --- */
+.viewer-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.viewer-header {
+  padding: 10px 0;
+  text-align: center;
+  border-bottom: 2px solid var(--color-primary);
+  margin-bottom: 15px;
+}
+
+.viewer-header h1 {
+  color: var(--color-primary);
+  font-size: 1.5rem; /* Ajuste para celular */
+}
+
+/* --- Estilos Gerais dos Cards (Bot/Worker) --- */
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.card.expanded {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  cursor: pointer;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.2s;
+}
+
+.card-header:hover {
+  background-color: #f1f1f1;
+}
+
+/* --- Indicador de Status --- */
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.status-online { background-color: var(--color-success); }.status-error { background-color: var(--color-danger); }
+
+.header-info {
+  flex-grow: 1;
+  min-width: 0; /* Permite que o texto seja truncado */
+}
+
+.header-info h3, .header-info h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+  color: var(--color-secondary);
+}
+
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toggle-icon, .worker-count, .log-count {
+  font-size: 0.9rem;
+  color: var(--color-secondary);
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+/* --- Container de Conteúdo (Aninhamento) --- */
+.card-content {
+  padding: 0; /* Remove padding externo para melhor alinhamento aninhado */
+  border-top: 1px solid var(--color-border);
+}
+
+.worker-list-container {
+  padding: 10px;
+}
+
+/* --- Estilos Específicos do Nível Worker --- */
+.worker-card {
+  margin-top: 5px; /* Espaço menor entre workers */
+  border: none;
+  background-color: var(--color-background);
+  box-shadow: none;
+}
+.worker-card .card-header {
+  padding-left: 10px; /* Recuo para aninhamento */
+  background-color: #f1f1f1;
+  border-radius: 4px;
+}
+.worker-card .card-header:hover {
+    background-color: #e5e5e5;
+}
+
+/* --- Estilos da Lista de Logs --- */
+.log-list-container {
+  padding: 10px 10px 10px 25px; /* Padding extra para recuo dos logs */
+  background-color: #f8f8f8;
+  border-radius: 0 0 4px 4px;
+}
+
+.log-entry {
+  display: flex;
+  font-size: 0.8rem;
+  padding: 4px 0;
+  border-bottom: 1px dotted #ccc;
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+.log-time {
+  font-weight: bold;
+  margin-right: 10px;
+  flex-shrink: 0;
+  color: var(--color-secondary);
+}
+
+.log-message {
+  margin: 0;
+  flex-grow: 1;
+  color: #555;
+}
+
+.log-level-error { color: var(--color-danger); }
+.log-level-warn { color: orange; }
+.log-level-info { color: var(--color-success); }
+
+.no-data,
+
+/* --- Responsividade (Media Query para Telas Maiores) --- */
+@media (min-width: 768px) {
+  .viewer-container {
+    max-width: 700px;
+    padding: 20px;
+  }
+  
+  .viewer-header h1 {
+    font-size: 2rem;
+  }
+
+  .card-header {
+    padding: 15px 20px;
+  }
+}
+
+/* --- Badges --- */
+.status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 12px;
+    color: #fff;
+    text-transform: uppercase;
+    background-color: var(--color-secondary);
+}
+.status-success { background-color: var(--color-success); }
+.status-error { background-color: var(--color-danger); }
+.status-warning { background-color: #ffc107; color: #333; }
+
+/* --- Load More Button --- */
+.load-more-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: var(--color-border);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #333;
+    transition: background-color 0.2s;
+}
+.load-more-btn:hover {
+    background-color: #dcdcdc;
+}
