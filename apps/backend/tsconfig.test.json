@@ -16,6 +16,7 @@
     "tests/**/*",
     "src/**/*.test.ts",
     "src/**/*.spec.ts",
-    "src/**/*"
+    "src/**/*",
+    "src/configuration/swagger.json"
   ]
 }

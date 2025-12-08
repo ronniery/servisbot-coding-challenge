@@ -1,18 +1,16 @@
-import type { PaginationParams, PaginatedResponse } from '@packages/shared';
+import type { PaginationParams, PaginatedResponse, Bot, Worker, Log } from '@packages/shared';
 
-import { logger, paginate, DataStore } from '../utils';
-import { Bot, Worker, type Log } from '../models';
+import { logger, paginate } from '../utils';
+import { BotModel, WorkerModel, LogModel } from '../models';
 
 export class BotService {
-  private readonly store: DataStore;
-  constructor(params: { store: DataStore }) {
+  constructor() {
     logger.debug('Initializing BotService');
-    this.store = params.store;
   }
 
   public getAllBots(params?: PaginationParams): PaginatedResponse<Bot> {
     logger.debug('Service: Getting all bots');
-    const bots = Bot.find();
+    const bots = BotModel.find();
 
     logger.debug(`Service: Found ${bots.length} bots`);
     const paginatedBots = paginate(bots, params || {});
@@ -25,12 +23,15 @@ export class BotService {
 
   public getBotById(id: string): Bot | undefined {
     logger.debug(`Service: Getting bot by ID: ${id}`);
-    return Bot.findById(id);
+    return BotModel.findById(id);
   }
 
-  public getWorkersByBotId(botId: string, params?: PaginationParams): PaginatedResponse<Worker> {
+  public getWorkersByBotId(
+    botId: string,
+    params?: PaginationParams,
+  ): PaginatedResponse<Worker> {
     logger.debug(`Service: Getting workers for bot: ${botId}`);
-    const workers = Bot.getWorkers(botId);
+    const workers = BotModel.getWorkers(botId);
     const paginatedWorkers = paginate(workers, params || {});
 
     logger.debug(
@@ -41,7 +42,7 @@ export class BotService {
 
   public getBotLogs(botId: string, params?: PaginationParams): PaginatedResponse<Log> {
     logger.debug(`Service: Getting logs for bot: ${botId}`);
-    const logs = Bot.getLogs(botId);
+    const logs = BotModel.getLogs(botId);
     const paginatedLogs = paginate(logs, params || {});
 
     logger.debug(
@@ -52,7 +53,7 @@ export class BotService {
 
   public getWorkerLogs(workerId: string, params?: PaginationParams): PaginatedResponse<Log> {
     logger.debug(`Service: Getting logs for worker: ${workerId}`);
-    const logs = Worker.getLogs(workerId);
+    const logs = WorkerModel.getLogs(workerId);
     const paginatedLogs = paginate(logs, params || {});
 
     logger.debug(

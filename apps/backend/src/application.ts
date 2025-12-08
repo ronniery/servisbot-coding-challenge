@@ -5,25 +5,28 @@ import morgan from 'morgan';
 
 import { type Environment } from './configuration';
 import { type DataStore, logger } from './utils';
-import { type BotController } from './controllers';
+import { type BotController, type DocsController } from './controllers';
 import { notFound, generalErrors } from './middlewares';
 
 export type ApplicationConstructorParams = {
   env: Environment;
   datastore: DataStore;
-  controller: BotController;
+  botController: BotController;
+  docsController: DocsController;
 };
 
 export class Application {
   private env: Environment;
-  private controller: BotController;
+  private botController: BotController;
+  private docsController: DocsController;
   private apiServer?: Server;
   private healthServer?: Server;
   private isShuttingDown = false;
 
   constructor(params: ApplicationConstructorParams) {
     this.env = params.env;
-    this.controller = params.controller;
+    this.botController = params.botController;
+    this.docsController = params.docsController;
     this.setupGracefulShutdown();
   }
 
@@ -116,7 +119,10 @@ export class Application {
     app.use(express.urlencoded({ extended: true }));
 
     logger.debug('Registering bot controller routes at /');
-    app.use('/', this.controller.getRouter());
+    app.use('/bots', this.botController.getRouter());
+
+    logger.debug('Registering docs controller routes');
+    app.use('/docs', this.docsController.getRouter());
 
     // Error handling middlewares
     app.use(notFound);

@@ -2,10 +2,11 @@ import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import type { Bot, Worker, Log, PaginationMeta } from '@packages/shared';
+
 import { Application } from '../src/application';
 import { createApp } from '../src/factory';
-import type { Bot, Worker, Log } from '../src/models';
-import type { PaginationMeta } from '../src/types';
+
 
 // Mocks
 vi.mock('fs');

@@ -1,8 +1,8 @@
 import express, { type Request, type Response, type Router as ExpressRouter } from 'express';
 import Router = express;
 
-import type { PaginatedResponse, PaginationParams } from '@packages/shared';
-import { Bot, Worker, Log } from '../models';
+import type { PaginatedResponse, PaginationParams, Bot, Worker, Log } from '@packages/shared';
+
 import { BotService } from '../services';
 import { logger } from '../utils';
 
@@ -59,7 +59,10 @@ export class BotController {
   /**
    * GET /bots/:bid
    */
-  private getBotById = (req: Request<BotQueryId>, res: Response<Bot | { error: string }>): void => {
+  private getBotById = (
+    req: Request<BotQueryId>,
+    res: Response<Bot | { error: string }>,
+  ): void => {
     const { bid } = req.params;
     logger.debug(`GET /bots/${bid} - Fetching bot by ID`);
     const bot = this.service.getBotById(bid);

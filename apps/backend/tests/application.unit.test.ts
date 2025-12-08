@@ -52,7 +52,8 @@ describe('application.unit', () => {
     app = new Application({
       env: mockEnv,
       datastore: mockDataStore,
-      controller: mockController,
+      botController: mockController,
+      docsController: {} as any, // We don't care about the docs controller
     });
   });
 

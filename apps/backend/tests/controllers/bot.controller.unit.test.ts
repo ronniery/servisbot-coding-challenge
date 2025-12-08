@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import express, { type Express } from 'express';
 
-import type { PaginatedResponse } from '../../src/types';
-import type { Bot, Worker, Log } from '../../src/models';
+import type { Bot, Worker, Log, PaginatedResponse } from '@packages/shared';
 
 import { BotController } from '../../src/controllers';
 import { BotService } from '../../src/services';

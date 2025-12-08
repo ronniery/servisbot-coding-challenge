@@ -1,3 +1,3 @@
-export * from './bot';
-export * from './log';
-export * from './worker';
+export * from './bot.model';
+export * from './log.model';
+export * from './worker.model';

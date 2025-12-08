@@ -1,9 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { Bot } from '../../models/bot';
-import { Worker } from '../../models/worker';
-import { Log } from '../../models/log';
+import { Bot, Log, Worker } from '@packages/shared';
+
 import { logger } from '../logger';
 
 export class DataStore {

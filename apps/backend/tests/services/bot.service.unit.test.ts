@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { BotService } from '../../src/services';
+import { Bot, Worker, Log, BotStatus } from '@packages/shared';
 import { DataStore } from '../../src/utils';
-import { Bot, Worker, Log, BotStatus } from '../../src/models';
+import { BotModel, LogModel, WorkerModel } from '../../src/models';
 
 // Mocks
 vi.mock('../../src/utils/logger', () => ({
@@ -66,20 +67,18 @@ describe('bot.service', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Create a mock DataStore structure
     mockDataStore = {
       botsById: mockBots,
-      workersById: mockWorkers.reduce((acc, w) => ({ ...acc, [w.id]: w }), {}),
-      logsById: mockLogs.reduce((acc, l) => ({ ...acc, [l.id]: l }), {}),
-      // Mock methods if any direct calls remain (unlikely)
+      workersById: mockWorkers.reduce((acc, worker) => ({ ...acc, [worker.id]: worker }), {}),
+      logsById: mockLogs.reduce((acc, log) => ({ ...acc, [log.id]: log }), {}),
     } as unknown as DataStore;
 
     // Inject mock DataStore into Models
-    Bot.datastore = mockDataStore;
-    Worker.datastore = mockDataStore;
-    Log.datastore = mockDataStore;
+    BotModel.datastore = mockDataStore;
+    WorkerModel.datastore = mockDataStore;
+    LogModel.datastore = mockDataStore;
 
-    service = new BotService({ store: mockDataStore });
+    service = new BotService();
   });
 
   describe('getAllBots', () => {
