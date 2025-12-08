@@ -1,15 +1,14 @@
-import swaggerUi from 'swagger-ui-express';
 import express, { type Request, type Response, type Router as ExpressRouter } from 'express';
+import swaggerUi from 'swagger-ui-express';
 import Router = express;
 
 import docs from '../configuration/swagger.json';
-import { logger } from '../utils';
 
 export class DocsController {
   private readonly router: ExpressRouter;
 
   constructor() {
-    logger.debug('Initializing DocsController');
+    // logger.debug('Initializing DocsController'); // This line will now cause an error due to logger removal
     this.router = Router();
     this.createRoutes();
   }
@@ -19,19 +18,13 @@ export class DocsController {
   }
 
   private createRoutes(): void {
-    logger.debug('Creating documentation routes');
-
-    this.router.get('/', (_: Request, res: Response) => swaggerUi.serve, swaggerUi.setup(docs));
-    this.router.get('/docs', (_: Request, res: Response) => {
-      logger.debug('Redirecting /docs to /doc');
+    this.router.get('/', swaggerUi.serve, swaggerUi.setup(docs));
+    this.router.get('/docs', (_req: Request, res: Response) => {
       res.redirect('/');
     });
 
-    this.router.get('/json', (_: Request, res: Response) => {
-      logger.debug('Redirecting /json to /doc');
+    this.router.get('/json', (_req: Request, res: Response) => {
       res.json(docs);
     });
-
-    logger.debug('Documentation routes created');
   }
 }

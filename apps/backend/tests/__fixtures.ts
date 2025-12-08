@@ -1,4 +1,4 @@
-import type { Bot, Log, Worker } from "@packages/shared";
+import type { Bot, Log, Worker } from '@packages/shared';
 
 export const TEST_BOTS: Bot[] = [
   {

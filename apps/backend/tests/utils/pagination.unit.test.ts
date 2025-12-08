@@ -1,9 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { paginate } from '../../src/utils/pagination';
 
 describe('pagination', () => {
-  const testData = Array.from({ length: 25 }, (_, index) => ({ id: index + 1, name: `Item ${index + 1}` }));
+  const testData = Array.from({ length: 25 }, (_, index) => ({
+    id: index + 1,
+    name: `Item ${index + 1}`,
+  }));
 
   describe('default pagination', () => {
     it('should use default page=1 and limit=10 when no params provided', () => {

@@ -1,9 +1,9 @@
 import { Application, type ApplicationConstructorParams } from './application';
-import { getEnvironment, type Environment } from './configuration';
-import { logger, DataStore } from './utils';
-import { BotService } from './services';
+import { type Environment, getEnvironment } from './configuration';
 import { BotController, DocsController } from './controllers';
 import { BotModel, LogModel, WorkerModel } from './models';
+import { BotService } from './services';
+import { DataStore, logger } from './utils';
 
 export async function createApp(): Promise<Application> {
   logger.info('Starting application initialization');

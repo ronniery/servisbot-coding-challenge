@@ -1,8 +1,8 @@
 import 'dotenv/config';
 
-import { logger } from './utils';
-import { createApp } from './factory';
 import { Application } from './application';
+import { createApp } from './factory';
+import { logger } from './utils';
 
 async function main(): Promise<void> {
   try {

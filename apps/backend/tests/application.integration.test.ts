@@ -1,12 +1,11 @@
-import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import type { Bot, Worker, Log, PaginationMeta } from '@packages/shared';
+import type { Bot, Log, PaginationMeta, Worker } from '@packages/shared';
 
 import { Application } from '../src/application';
 import { createApp } from '../src/factory';
-
 
 // Mocks
 vi.mock('fs');
@@ -156,7 +155,7 @@ describe('application.integration', () => {
 
   describe('API Server - GET /', () => {
     it('should return paginated bots with default params', async () => {
-      const response = await fetch(`http://localhost:${apiPort}/`);
+      const response = await fetch(`http://localhost:${apiPort}/bots`);
       const data = await response.json<{ data: Bot[]; pagination: PaginationMeta }>();
 
       expect(response.status).toBe(200);
@@ -167,7 +166,7 @@ describe('application.integration', () => {
     });
 
     it('should respect page parameter', async () => {
-      const response = await fetch(`http://localhost:${apiPort}/?page=2&limit=2`);
+      const response = await fetch(`http://localhost:${apiPort}/bots?page=2&limit=2`);
       const data = await response.json<{ data: Bot[]; pagination: PaginationMeta }>();
 
       expect(response.status).toBe(200);
@@ -176,10 +175,8 @@ describe('application.integration', () => {
       expect(data.pagination.limit).toBe(2);
     });
 
-
-
     it('should include CORS headers', async () => {
-      const response = await fetch(`http://localhost:${apiPort}/`);
+      const response = await fetch(`http://localhost:${apiPort}/bots`);
 
       expect(response.headers.get('access-control-allow-origin')).toBeDefined();
     });
@@ -187,7 +184,7 @@ describe('application.integration', () => {
 
   describe('API Server - GET /:id', () => {
     it('should return bot by ID', async () => {
-      const response = await fetch(`http://localhost:${apiPort}/bot-1`);
+      const response = await fetch(`http://localhost:${apiPort}/bots/bot-1`);
       const data = await response.json<Bot>();
 
       expect(response.status).toBe(200);
@@ -196,7 +193,7 @@ describe('application.integration', () => {
     });
 
     it('should return 404 for non-existent bot', async () => {
-      const response = await fetch(`http://localhost:${apiPort}/non-existent-bot`);
+      const response = await fetch(`http://localhost:${apiPort}/bots/non-existent-bot`);
       const data = await response.json<{ error: string }>();
 
       expect(response.status).toBe(404);
@@ -206,7 +203,7 @@ describe('application.integration', () => {
 
   describe('API Server - GET /:id/workers', () => {
     it('should return paginated workers for a bot', async () => {
-      const response = await fetch(`http://localhost:${apiPort}/bot-1/workers`);
+      const response = await fetch(`http://localhost:${apiPort}/bots/bot-1/workers`);
       const data = await response.json<{ data: Worker[]; pagination: PaginationMeta }>();
 
       expect(response.status).toBe(200);
@@ -217,7 +214,7 @@ describe('application.integration', () => {
     });
 
     it('should respect pagination params for workers', async () => {
-      const response = await fetch(`http://localhost:${apiPort}/bot-1/workers?page=1&limit=1`);
+      const response = await fetch(`http://localhost:${apiPort}/bots/bot-1/workers?page=1&limit=1`);
       const data = await response.json<{ data: Worker[]; pagination: PaginationMeta }>();
 
       expect(response.status).toBe(200);
@@ -227,7 +224,7 @@ describe('application.integration', () => {
     });
 
     it('should return empty paginated result for bot with no workers', async () => {
-      const response = await fetch(`http://localhost:${apiPort}/bot-3/workers`);
+      const response = await fetch(`http://localhost:${apiPort}/bots/bot-3/workers`);
       const data = await response.json<{ data: Worker[]; pagination: PaginationMeta }>();
 
       expect(response.status).toBe(200);
@@ -238,7 +235,7 @@ describe('application.integration', () => {
 
   describe('API Server - GET /:id/logs', () => {
     it('should return paginated logs for a bot', async () => {
-      const response = await fetch(`http://localhost:${apiPort}/bot-1/logs`);
+      const response = await fetch(`http://localhost:${apiPort}/bots/bot-1/logs`);
       const data = await response.json<{ data: Log[]; pagination: PaginationMeta }>();
 
       expect(response.status).toBe(200);
@@ -248,7 +245,7 @@ describe('application.integration', () => {
     });
 
     it('should respect pagination params', async () => {
-      const response = await fetch(`http://localhost:${apiPort}/bot-1/logs?page=2&limit=5`);
+      const response = await fetch(`http://localhost:${apiPort}/bots/bot-1/logs?page=2&limit=5`);
       const data = await response.json<{ data: Log[]; pagination: PaginationMeta }>();
 
       expect(response.status).toBe(200);
@@ -258,7 +255,7 @@ describe('application.integration', () => {
     });
 
     it('should return 404 for non-existent bot with no logs', async () => {
-      const response = await fetch(`http://localhost:${apiPort}/non-existent/logs`);
+      const response = await fetch(`http://localhost:${apiPort}/bots/non-existent/logs`);
       const data = await response.json<{ error: string }>();
 
       expect(response.status).toBe(404);
@@ -268,7 +265,7 @@ describe('application.integration', () => {
 
   describe('API Server - GET /:id/workers/:wid/logs', () => {
     it('should return paginated logs for a worker', async () => {
-      const response = await fetch(`http://localhost:${apiPort}/bot-1/workers/worker-1/logs`);
+      const response = await fetch(`http://localhost:${apiPort}/bots/bot-1/workers/worker-1/logs`);
       const data = await response.json<{ data: Log[]; pagination: PaginationMeta }>();
 
       expect(response.status).toBe(200);
@@ -279,7 +276,7 @@ describe('application.integration', () => {
 
     it('should respect pagination params', async () => {
       const response = await fetch(
-        `http://localhost:${apiPort}/bot-1/workers/worker-1/logs?page=1&limit=15`,
+        `http://localhost:${apiPort}/bots/bot-1/workers/worker-1/logs?page=1&limit=15`,
       );
       const data = await response.json<{ data: Log[]; pagination: PaginationMeta }>();
 
@@ -291,7 +288,9 @@ describe('application.integration', () => {
 
   describe('Error Handling', () => {
     it('should return 404 for unknown routes', async () => {
-      const response = await fetch(`http://localhost:${apiPort}/this-is-definitely-not-a-valid-bot-id-12345`);
+      const response = await fetch(
+        `http://localhost:${apiPort}/bots/this-is-definitely-not-a-valid-bot-id-12345`,
+      );
       const data = await response.json<{ error: string }>();
 
       expect(response.status).toBe(404);
@@ -309,7 +308,7 @@ describe('application.integration', () => {
 
   describe('Response Headers', () => {
     it('should include CORS headers in all responses', async () => {
-      const response = await fetch(`http://localhost:${apiPort}/`);
+      const response = await fetch(`http://localhost:${apiPort}/bots`);
 
       expect(response.headers.get('access-control-allow-origin')).toBeDefined();
     });

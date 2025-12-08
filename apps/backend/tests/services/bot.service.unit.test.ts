@@ -1,9 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { BotService } from '../../src/services';
-import { Bot, Worker, Log, BotStatus } from '@packages/shared';
-import { DataStore } from '../../src/utils';
+import { Bot, BotStatus, Log, Worker } from '@packages/shared';
+
 import { BotModel, LogModel, WorkerModel } from '../../src/models';
+import { BotService } from '../../src/services';
+import { DataStore } from '../../src/utils';
 
 // Mocks
 vi.mock('../../src/utils/logger', () => ({
@@ -55,14 +56,18 @@ describe('bot.service', () => {
     } as Worker,
   ];
 
-  const mockLogs: Log[] = Array.from({ length: 25 }, (_, i) => ({
-    id: `log-${i}`,
-    bot: 'bot-1',
-    worker: 'worker-1',
-    botId: 'bot-1',
-    message: `Test log message ${i}`,
-    created: 1713809849892 + i * 1000,
-  } as Log));
+  const mockLogs: Log[] = Array.from(
+    { length: 25 },
+    (_, i) =>
+      ({
+        id: `log-${i}`,
+        bot: 'bot-1',
+        worker: 'worker-1',
+        botId: 'bot-1',
+        message: `Test log message ${i}`,
+        created: 1713809849892 + i * 1000,
+      }) as Log,
+  );
 
   beforeEach(() => {
     vi.clearAllMocks();

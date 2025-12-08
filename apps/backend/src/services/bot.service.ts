@@ -1,7 +1,7 @@
-import type { PaginationParams, PaginatedResponse, Bot, Worker, Log } from '@packages/shared';
+import type { Bot, Log, PaginatedResponse, PaginationParams, Worker } from '@packages/shared';
 
+import { BotModel, WorkerModel } from '../models';
 import { logger, paginate } from '../utils';
-import { BotModel, WorkerModel, LogModel } from '../models';
 
 export class BotService {
   constructor() {
@@ -26,10 +26,7 @@ export class BotService {
     return BotModel.findById(id);
   }
 
-  public getWorkersByBotId(
-    botId: string,
-    params?: PaginationParams,
-  ): PaginatedResponse<Worker> {
+  public getWorkersByBotId(botId: string, params?: PaginationParams): PaginatedResponse<Worker> {
     logger.debug(`Service: Getting workers for bot: ${botId}`);
     const workers = BotModel.getWorkers(botId);
     const paginatedWorkers = paginate(workers, params || {});

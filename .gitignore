@@ -122,6 +122,9 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+**/test-results/*.last-run.json
+**/playwright-report
+**/playwright-report/index.html
 
 # yarn v2
 .yarn/cache

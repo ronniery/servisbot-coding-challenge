@@ -1,12 +1,12 @@
+import cors from 'cors';
 import express, { type Express, type Request, type Response } from 'express';
 import type { Server } from 'http';
-import cors from 'cors';
 import morgan from 'morgan';
 
 import { type Environment } from './configuration';
-import { type DataStore, logger } from './utils';
 import { type BotController, type DocsController } from './controllers';
-import { notFound, generalErrors } from './middlewares';
+import { generalErrors, notFound } from './middlewares';
+import { type DataStore, logger } from './utils';
 
 export type ApplicationConstructorParams = {
   env: Environment;

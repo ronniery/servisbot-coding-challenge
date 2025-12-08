@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DataStore } from '../../../src/utils';
 
@@ -108,7 +108,10 @@ describe('datastore', () => {
 
       expect(fs.readFileSync).toHaveBeenCalledTimes(3);
       expect(fs.readFileSync).toHaveBeenCalledWith(expect.stringContaining('bots.json'), 'utf-8');
-      expect(fs.readFileSync).toHaveBeenCalledWith(expect.stringContaining('workers.json'), 'utf-8');
+      expect(fs.readFileSync).toHaveBeenCalledWith(
+        expect.stringContaining('workers.json'),
+        'utf-8',
+      );
       expect(fs.readFileSync).toHaveBeenCalledWith(expect.stringContaining('logs.json'), 'utf-8');
     });
 
@@ -152,7 +155,6 @@ describe('datastore', () => {
       expect(store.logsById['log-1']?.message).toBe(mockLogs[0]?.message);
     });
   });
-
 
   describe('edge cases', () => {
     it('should handle worker with invalid bot name', () => {

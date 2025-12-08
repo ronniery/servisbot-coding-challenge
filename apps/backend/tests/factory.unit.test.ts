@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createApp } from '../src/factory';
 import { Application } from '../src/application';
+import { createApp } from '../src/factory';
 
 // Mocks
 vi.mock('fs');

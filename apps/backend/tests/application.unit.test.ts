@@ -1,10 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach, Mock } from 'vitest';
-
-import type { Environment } from '../src/configuration';
-import type { DataStore } from '../src/utils';
-import type { BotController } from '../src/controllers';
+import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 
 import { Application } from '../src/application';
+import type { Environment } from '../src/configuration';
+import type { BotController } from '../src/controllers';
+import type { DataStore } from '../src/utils';
 import { logger } from '../src/utils';
 
 vi.mock('../src/utils/logger', () => ({
@@ -16,20 +15,19 @@ vi.mock('../src/utils/logger', () => ({
   },
 }));
 
-
 describe('application.unit', () => {
   let mockEnv: Environment;
   let mockDataStore: DataStore;
   let mockController: BotController;
   let app: Application;
-  let processExitSpy: Mock<typeof process.exit> ;
+  let processExitSpy: Mock<typeof process.exit>;
   let processOnSpy: Mock<typeof process.on>;
 
   beforeEach(() => {
     vi.clearAllMocks();
 
     // Mock process.exit to prevent tests from actually exiting
-    processExitSpy = vi.spyOn(process, 'exit').mockImplementation((() => { }) as any);
+    processExitSpy = vi.spyOn(process, 'exit').mockImplementation((() => {}) as any);
     processOnSpy = vi.spyOn(process, 'on');
 
     mockEnv = {
@@ -79,12 +77,9 @@ describe('application.unit', () => {
 
   describe('error handlers', () => {
     it('should handle uncaughtException', async () => {
-
-
       // Get the uncaughtException handler
-      const [, uncaughtExceptionHandler] = processOnSpy.mock.calls.find(
-        (call) => call[0] === 'uncaughtException',
-      ) ?? [];
+      const [, uncaughtExceptionHandler] =
+        processOnSpy.mock.calls.find((call) => call[0] === 'uncaughtException') ?? [];
 
       expect(uncaughtExceptionHandler).toBeDefined();
 
@@ -94,19 +89,15 @@ describe('application.unit', () => {
       uncaughtExceptionHandler?.(testError);
 
       // Verify logger was called
-      expect(logger.error).toHaveBeenCalledWith(
-        `Uncaught exception: ${testError.message}`,
-        { stack: testError.stack },
-      );
+      expect(logger.error).toHaveBeenCalledWith(`Uncaught exception: ${testError.message}`, {
+        stack: testError.stack,
+      });
     });
 
     it('should handle unhandledRejection', async () => {
-
-
       // Get the unhandledRejection handler
-      const [, unhandledRejectionHandler] = processOnSpy.mock.calls.find(
-        (call) => call[0] === 'unhandledRejection',
-      ) ?? [];
+      const [, unhandledRejectionHandler] =
+        processOnSpy.mock.calls.find((call) => call[0] === 'unhandledRejection') ?? [];
 
       expect(unhandledRejectionHandler).toBeDefined();
 
@@ -122,7 +113,8 @@ describe('application.unit', () => {
 
   describe('signal handlers', () => {
     it('should register SIGTERM handler', () => {
-      const [, sigtermHandler] = processOnSpy.mock.calls.find((call) => call[0] === 'SIGTERM') ?? [];
+      const [, sigtermHandler] =
+        processOnSpy.mock.calls.find((call) => call[0] === 'SIGTERM') ?? [];
 
       expect(sigtermHandler).toBeDefined();
       expect(typeof sigtermHandler).toBe('function');
@@ -136,9 +128,8 @@ describe('application.unit', () => {
     });
 
     it('should handle SIGTERM signal', async () => {
-
-
-      const [, sigtermHandler] = processOnSpy.mock.calls.find((call) => call[0] === 'SIGTERM') ?? [];
+      const [, sigtermHandler] =
+        processOnSpy.mock.calls.find((call) => call[0] === 'SIGTERM') ?? [];
 
       // Call the handler
       sigtermHandler?.();
@@ -148,8 +139,6 @@ describe('application.unit', () => {
     });
 
     it('should handle SIGINT signal', async () => {
-
-
       const [, sigintHandler] = processOnSpy.mock.calls.find((call) => call[0] === 'SIGINT') ?? [];
 
       // Call the handler
@@ -160,9 +149,8 @@ describe('application.unit', () => {
     });
 
     it('should force shutdown on second signal', async () => {
-
-
-      const [, sigtermHandler] = processOnSpy.mock.calls.find((call) => call[0] === 'SIGTERM') ?? [];
+      const [, sigtermHandler] =
+        processOnSpy.mock.calls.find((call) => call[0] === 'SIGTERM') ?? [];
 
       // Call the handler twice
       sigtermHandler?.();
