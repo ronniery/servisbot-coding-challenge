@@ -58,7 +58,7 @@ echo -e "${GREEN}✓ Dependencies installed${NC}"
 echo -e "\n${YELLOW}[2/5] Running Linters...${NC}"
 
 echo ">> Checking Backend Lint..."
-if npm run lint --workspace=apps/backend; then
+if npm run lint --prefix apps/backend; then
     echo -e "${GREEN}✓ Backend Lint Passed${NC}"
 else
     echo -e "${RED}✗ Backend Lint Failed${NC}"
@@ -66,7 +66,7 @@ else
 fi
 
 echo ">> Checking Frontend Lint..."
-if npm run lint --workspace=apps/frontend; then
+if npm run lint --prefix apps/frontend; then
     echo -e "${GREEN}✓ Frontend Lint Passed${NC}"
 else
     echo -e "${RED}✗ Frontend Lint Failed${NC}"
@@ -77,7 +77,7 @@ fi
 echo -e "\n${YELLOW}[3/5] Running Unit Tests...${NC}"
 
 echo ">> Backend Unit Tests..."
-if npm run test:unit --workspace=apps/backend; then
+if npm run test:unit --prefix apps/backend; then
     echo -e "${GREEN}✓ Backend Unit Tests Passed${NC}"
 else
     echo -e "${RED}✗ Backend Unit Tests Failed${NC}"
@@ -85,7 +85,7 @@ else
 fi
 
 echo ">> Frontend Unit Tests..."
-if npm run test:unit --workspace=apps/frontend; then
+if npm run test:unit --prefix apps/frontend; then
     echo -e "${GREEN}✓ Frontend Unit Tests Passed${NC}"
 else
     echo -e "${RED}✗ Frontend Unit Tests Failed${NC}"
@@ -96,7 +96,7 @@ fi
 echo -e "\n${YELLOW}[4/5] Running Integration Tests...${NC}"
 
 echo ">> Backend Integration Tests..."
-if npm run test:integration --workspace=apps/backend; then
+if npm run test:integration --prefix apps/backend; then
     echo -e "${GREEN}✓ Backend Integration Tests Passed${NC}"
 else
     echo -e "${RED}✗ Backend Integration Tests Failed${NC}"
@@ -106,7 +106,7 @@ fi
 echo ">> Frontend E2E Tests (Integration)..."
 # Note: E2E tests might require browsers installed. npx playwright install might be needed.
 # Attempting to run.
-if npx playwright install --with-deps && npm run test:e2e --workspace=apps/frontend; then
+if npx playwright install --with-deps && npm run test:e2e --prefix apps/frontend; then
     echo -e "${GREEN}✓ Frontend E2E Tests Passed${NC}"
 else
     echo -e "${RED}✗ Frontend E2E Tests Failed${NC}"

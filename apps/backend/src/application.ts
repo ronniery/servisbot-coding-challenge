@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express, { type Express, type Request, type Response } from 'express';
+import express, { type Express } from 'express';
 import type { Server } from 'http';
 import morgan from 'morgan';
 
