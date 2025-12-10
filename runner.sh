@@ -52,7 +52,11 @@ npm install
 # Run the project-specific install script
 npm run npm:install
 
-echo -e "${GREEN}✓ Dependencies installed${NC}"
+# Build the shared package
+echo -e "\n${YELLOW}[Setup] Building shared package...${NC}"
+npm run build --prefix packages/shared
+
+echo -e "${GREEN}✓ Dependencies installed and shared package built${NC}"
 
 # 2. Linters
 echo -e "\n${YELLOW}[2/5] Running Linters...${NC}"
