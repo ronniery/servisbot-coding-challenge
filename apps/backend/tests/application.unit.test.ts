@@ -26,7 +26,7 @@ describe('application.unit', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    processExitSpy = vi.spyOn(process, 'exit').mockImplementation((() => { }) as any);
+    processExitSpy = vi.spyOn(process, 'exit').mockImplementation((() => {}) as any);
     processOnSpy = vi.spyOn(process, 'on').mockImplementation(() => process);
 
     mockEnv = {

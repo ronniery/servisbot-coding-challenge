@@ -40,6 +40,6 @@ A simple frontend that will display in a interactive way the bots and its depend
 
 ## Requirements
 
-- **Node.js**: v18+
-- **npm**: v9+
+- **Node.js**: v22+
+- **npm**: v10+
 - **Backend Service**: Must be running for full functionality.

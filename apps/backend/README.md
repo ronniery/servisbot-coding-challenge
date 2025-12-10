@@ -48,8 +48,8 @@ The project follows a standard layered architecture:
 
 ## Requirements
 
-- **Node.js**: v18+
-- **npm**: v9+
+- **Node.js**: v22+
+- **npm**: v10+
 - **Docker**: (Optional) For running via Docker Compose.
 
 ## Routes
