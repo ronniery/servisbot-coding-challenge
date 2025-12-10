@@ -123,8 +123,10 @@ else
 fi
 
 echo ">> Frontend E2E Tests (Integration)..."
-# Note: E2E tests might require browsers installed. npx playwright install might be needed.
-# Attempting to run.
+# Ensure Playwright browsers are installed
+echo "Ensuring Playwright browsers are installed..."
+npx playwright install
+
 if npm run test:e2e --prefix apps/frontend; then
     echo -e "${GREEN}✓ Frontend E2E Tests Passed${NC}"
 else
