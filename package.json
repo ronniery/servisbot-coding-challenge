@@ -5,7 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node generate.mjs",
-    "start:dev": "concurrently -n \"backend,frontend\" -c \"blue,green\" \"npm run dev --prefix apps/backend\" \"npm run dev --prefix apps/frontend\""
+    "start:dev": "concurrently -n \"backend,frontend\" -c \"blue,green\" \"npm run dev --prefix apps/backend\" \"npm run dev --prefix apps/frontend\"",
+    "test:unit": "concurrently -n \"backend,frontend\" -c \"blue,green\" \"npm run test:unit --prefix apps/backend\" \"npm run test:unit --prefix apps/frontend\"",
+    "test:e2e": "concurrently -n \"backend,frontend\" -c \"blue,green\" \"npm run test:integration --prefix apps/backend\" \"npm run test:e2e --prefix apps/frontend\"",
+    "lint:all": "concurrently -n \"backend,frontend\" -c \"blue,green\" \"npm run lint:fix --prefix apps/backend\" \"npm run lint:fix --prefix apps/frontend\"",
+    "format:all": "concurrently -n \"backend,frontend\" -c \"blue,green\" \"npm run format:fix --prefix apps/backend\" \"npm run format:fix --prefix apps/frontend\"",
+    "npm:install": "concurrently -n \"backend,frontend\" -c \"blue,green\" \"npm install --prefix apps/backend\" \"npm install --prefix apps/frontend\"",
+   "docker:up": "trap 'docker compose down -v --rmi local' INT TERM EXIT; docker compose up --build"
   },
   "author": "",
   "license": "ISC",
