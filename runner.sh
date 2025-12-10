@@ -33,6 +33,21 @@ echo -e "${CYAN}=======================================${NC}"
 echo -e "${CYAN}      Servisbot Runner Script          ${NC}"
 echo -e "${CYAN}=======================================${NC}"
 
+# Check for Node.js and npm
+if ! command -v node &> /dev/null; then
+  echo -e "${RED}Error: Node.js is not installed.${NC}"
+  exit 1
+fi
+
+if ! command -v npm &> /dev/null; then
+  echo -e "${RED}Error: npm is not installed.${NC}"
+  exit 1
+fi
+
+# 1. Checkout Code
+echo -e "\n${YELLOW}[1/5] Checking out code...${NC}"
+echo "Creating temporary workspace: $TEMP_DIR"
+
 # 1. Checkout Code
 echo -e "\n${YELLOW}[1/5] Checking out code...${NC}"
 echo "Creating temporary workspace: $TEMP_DIR"
@@ -110,18 +125,27 @@ fi
 echo ">> Frontend E2E Tests (Integration)..."
 # Note: E2E tests might require browsers installed. npx playwright install might be needed.
 # Attempting to run.
-if npx playwright install --with-deps && npm run test:e2e --prefix apps/frontend; then
+if npm run test:e2e --prefix apps/frontend; then
     echo -e "${GREEN}✓ Frontend E2E Tests Passed${NC}"
 else
     echo -e "${RED}✗ Frontend E2E Tests Failed${NC}"
     exit 1
 fi
 
-# 5. Docker Compose
-echo -e "\n${YELLOW}[5/5] Docker Compose Execution...${NC}"
-echo "Building and starting containers..."
-echo "Press Ctrl+C to stop and cleanup."
+# 5. Execution (Docker or Local)
+echo -e "\n${YELLOW}[5/5] Execution...${NC}"
 
-npm run docker:up
+if command -v docker &> /dev/null; then
+    echo -e "${GREEN}Docker found. Running via Docker Compose...${NC}"
+    echo "Building and starting containers..."
+    echo "Press Ctrl+C to stop and cleanup."
+    npm run docker:up
+else
+    echo -e "${YELLOW}Docker not found. Falling back to local development server...${NC}"
+    echo "Starting local dev server..."
+    echo "Press Ctrl+C to stop and cleanup."
+    npm run start:dev
+fi
+
 
 exit 0
