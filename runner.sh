@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-# Colors
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
@@ -34,18 +33,23 @@ echo -e "${CYAN}=======================================${NC}"
 echo -e "${CYAN}      Servisbot Runner Script          ${NC}"
 echo -e "${CYAN}=======================================${NC}"
 
-# 1. Checkout Code (Copying to temp dir to simulate fresh checkout)
+# 1. Checkout Code
 echo -e "\n${YELLOW}[1/5] Checking out code...${NC}"
 echo "Creating temporary workspace: $TEMP_DIR"
 
-echo "Copying project files..."
-rsync -av --progress . "$TEMP_DIR" --exclude node_modules --exclude .git --exclude dist --exclude coverage --exclude .gemini --exclude temp_build > /dev/null
+# Clone the repository
+git clone https://github.com/ronniery/servisbot-coding-challenge.git "$TEMP_DIR"
 
 cd "$TEMP_DIR"
 echo -e "${GREEN}✓ Code checked out to $TEMP_DIR${NC}"
 
-# Install backend and frontend dependencies
+# Install dependencies
 echo -e "\n${YELLOW}[Setup] Installing dependencies...${NC}"
+
+# Install root dependencies
+npm install
+
+# Run the project-specific install script
 npm run npm:install
 
 echo -e "${GREEN}✓ Dependencies installed${NC}"
