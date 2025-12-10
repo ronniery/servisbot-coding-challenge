@@ -116,40 +116,37 @@ describe('application.integration', () => {
 
   describe('Health Check Server', () => {
     it('should respond to /health endpoint', async () => {
-      const response = await fetch(`http://localhost:${healthPort}/health`);
+      const response = await fetch(`http://localhost:${apiPort}/health`);
 
       expect(response.status).toBe(200);
       expect(await response.text()).toBe('OK');
     });
 
-    it('should redirect root to /health', async () => {
-      const response = await fetch(`http://localhost:${healthPort}/`, {
-        redirect: 'manual',
-      });
+    it('should return 200 OK on root', async () => {
+      const response = await fetch(`http://localhost:${apiPort}/`);
 
-      expect(response.status).toBe(302);
-      expect(response.headers.get('location')).toBe('/health');
+      expect(response.status).toBe(200);
+      expect(await response.text()).toBe('OK');
     });
 
-    it('should redirect unknown routes to /health', async () => {
-      const response = await fetch(`http://localhost:${healthPort}/unknown`, {
-        redirect: 'manual',
-      });
+    it('should return 404 on unknown routes', async () => {
+      const response = await fetch(`http://localhost:${apiPort}/unknown`);
 
-      expect(response.status).toBe(302);
-      expect(response.headers.get('location')).toBe('/health');
+      expect(response.status).toBe(404);
     });
 
     it('should return 503 when shutting down', async () => {
       const ref = app as any;
       ref.isShuttingDown = true;
+      ref.healthController.setShuttingDown(true);
 
-      const response = await fetch(`http://localhost:${healthPort}/health`);
+      const response = await fetch(`http://localhost:${apiPort}/health`);
 
       expect(response.status).toBe(503);
       expect(await response.text()).toBe('Service Unavailable');
 
       ref.isShuttingDown = false;
+      ref.healthController.setShuttingDown(false);
     });
   });
 
