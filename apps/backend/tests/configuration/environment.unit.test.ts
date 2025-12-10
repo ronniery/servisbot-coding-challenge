@@ -59,16 +59,14 @@ describe('environment', () => {
       expect(result).toBe(env);
     });
 
-    it('should throw error when API_PORT is missing', () => {
+    it('should use default API_PORT when missing', () => {
       const env = new Environment({ HEALTH_CHECK_PORT: '3001' });
-
-      expect(() => env.validate()).toThrow();
+      expect(env.validate().API_PORT).toBe(3001);
     });
 
-    it('should throw error when HEALTH_CHECK_PORT is missing', () => {
+    it('should use default HEALTH_CHECK_PORT when missing', () => {
       const env = new Environment({ API_PORT: '3000' });
-
-      expect(() => env.validate()).toThrow();
+      expect(env.validate().HEALTH_CHECK_PORT).toBe(3002);
     });
 
     it('should throw error when API_PORT is not a number', () => {
@@ -83,10 +81,12 @@ describe('environment', () => {
       expect(() => env.validate()).toThrow();
     });
 
-    it('should throw error when both ports are missing', () => {
+    it('should use defaults when both ports are missing', () => {
       const env = new Environment({});
 
-      expect(() => env.validate()).toThrow();
+      expect(() => env.validate()).not.toThrow();
+      expect(env.API_PORT).toBe(3001);
+      expect(env.HEALTH_CHECK_PORT).toBe(3002);
     });
 
     it('should accept zero as valid port', () => {
@@ -120,7 +120,7 @@ describe('environment', () => {
       delete process.env.API_PORT;
       delete process.env.HEALTH_CHECK_PORT;
 
-      expect(() => getEnvironment()).toThrow();
+      expect(() => getEnvironment()).not.toThrow();
     });
 
     it('should return Environment instance', () => {

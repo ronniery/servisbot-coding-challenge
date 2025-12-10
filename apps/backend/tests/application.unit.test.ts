@@ -27,7 +27,7 @@ describe('application.unit', () => {
     vi.clearAllMocks();
 
     // Mock process.exit to prevent tests from actually exiting
-    processExitSpy = vi.spyOn(process, 'exit').mockImplementation((() => {}) as any);
+    processExitSpy = vi.spyOn(process, 'exit').mockImplementation((() => { }) as any);
     processOnSpy = vi.spyOn(process, 'on');
 
     mockEnv = {
@@ -51,6 +51,7 @@ describe('application.unit', () => {
       env: mockEnv,
       datastore: mockDataStore,
       botController: mockController,
+      healthController: {} as any,
       docsController: {} as any, // We don't care about the docs controller
     });
   });
@@ -85,7 +86,6 @@ describe('application.unit', () => {
 
       const testError = new Error('Test uncaught exception');
 
-      // Call the handler
       uncaughtExceptionHandler?.(testError);
 
       // Verify logger was called

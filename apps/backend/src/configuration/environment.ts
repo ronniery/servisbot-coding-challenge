@@ -8,8 +8,14 @@ export class Environment {
   @IsNotEmpty()
   public readonly API_PORT: number;
 
-  constructor(env: Record<string, any>) {
+  @IsNumber()
+  @IsOptional()
+  @IsNotEmpty()
+  public readonly HEALTH_CHECK_PORT: number;
+
+  public constructor(env: Record<string, any> = {}) {
     this.API_PORT = env.API_PORT ? Number(env.API_PORT) : 3001;
+    this.HEALTH_CHECK_PORT = env.HEALTH_CHECK_PORT ? Number(env.HEALTH_CHECK_PORT) : 3002;
   }
 
   public validate(): Environment {

@@ -1,8 +1,4 @@
-import { IsNotEmpty, IsUrl, validateSync } from 'class-validator';
-
 export class Environment {
-  @IsUrl({ require_tld: false })
-  @IsNotEmpty()
   API_BASE_URL: string;
 
   constructor(env: ImportMetaEnv) {
@@ -10,11 +6,10 @@ export class Environment {
   }
 
   public validate(): Environment {
-    const errors = validateSync(this);
-    if (errors.length > 0) {
-      throw new Error(errors.toString());
+    if (!this.API_BASE_URL) {
+      throw new Error("API_BASE_URL is missing");
     }
-    
+
     return this;
   }
 }
