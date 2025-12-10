@@ -7,8 +7,7 @@ import docs from '../configuration/swagger.json';
 export class DocsController {
   private readonly router: ExpressRouter;
 
-  constructor() {
-    // logger.debug('Initializing DocsController'); // This line will now cause an error due to logger removal
+  public constructor() {
     this.router = Router();
     this.createRoutes();
   }

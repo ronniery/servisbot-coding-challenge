@@ -4,7 +4,7 @@ import type { Server } from 'http';
 import morgan from 'morgan';
 
 import { type Environment } from './configuration';
-import { type BotController, type DocsController } from './controllers';
+import { type BotController, type DocsController, type HealthController } from './controllers';
 import { generalErrors, notFound } from './middlewares';
 import { type DataStore, logger } from './utils';
 
@@ -13,25 +13,26 @@ export type ApplicationConstructorParams = {
   datastore: DataStore;
   botController: BotController;
   docsController: DocsController;
+  healthController: HealthController;
 };
 
 export class Application {
   private env: Environment;
   private botController: BotController;
   private docsController: DocsController;
+  private healthController: HealthController;
   private apiServer?: Server;
-  private healthServer?: Server;
   private isShuttingDown = false;
 
   constructor(params: ApplicationConstructorParams) {
     this.env = params.env;
     this.botController = params.botController;
     this.docsController = params.docsController;
+    this.healthController = params.healthController;
     this.setupGracefulShutdown();
   }
 
   public async start(): Promise<void> {
-    await this.startHealthServer();
     await this.startApiServer();
   }
 
@@ -47,6 +48,7 @@ export class Application {
 
         logger.info(`${signal} received, starting graceful shutdown`);
         this.isShuttingDown = true;
+        this.healthController.setShuttingDown(true);
 
         await this.shutdown();
       });
@@ -81,19 +83,6 @@ export class Application {
       );
     }
 
-    if (this.healthServer) {
-      shutdownPromises.push(
-        new Promise<void>((resolve) => {
-          logger.debug('Closing health check server...');
-
-          this.healthServer!.close(() => {
-            logger.info('Health check server closed');
-            resolve();
-          });
-        }),
-      );
-    }
-
     await Promise.all(shutdownPromises);
     logger.info('Graceful shutdown complete');
     process.exit(0);
@@ -118,11 +107,17 @@ export class Application {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
-    logger.debug('Registering bot controller routes at /');
+    logger.debug('Registering health controller routes');
+    app.use('/', this.healthController.getRouter());
+
+    logger.debug('Registering bot controller routes at /bots');
     app.use('/bots', this.botController.getRouter());
 
-    logger.debug('Registering docs controller routes');
+    logger.debug('Registering docs controller routes at /docs');
     app.use('/docs', this.docsController.getRouter());
+
+    logger.debug('Registering health controller routes at /health');
+    app.use('/health', this.healthController.getRouter());
 
     // Error handling middlewares
     app.use(notFound);
@@ -130,37 +125,6 @@ export class Application {
 
     this.apiServer = app.listen(this.env.API_PORT, (): void => {
       logger.info(`API server started on port ${this.env.API_PORT}`);
-    });
-  }
-
-  private async startHealthServer(): Promise<void> {
-    logger.info('Starting health check server...');
-    const app: Express = express();
-
-    app.all('/health', (_: Request, res: Response): void => {
-      if (this.isShuttingDown) {
-        logger.debug('Health check endpoint hit during shutdown, returning 503');
-        res.status(503).send('Service Unavailable');
-        return;
-      }
-
-      logger.debug('Health check endpoint hit');
-      res.status(200).send('OK');
-    });
-
-    app.get('/', (_: Request, res: Response): void => {
-      logger.debug('Root endpoint hit, redirecting to /health');
-      res.redirect('/health');
-    });
-
-    // catch-all unmatched routes
-    app.use((_: Request, res: Response): void => {
-      logger.debug('Unknown endpoint hit, redirecting to /health');
-      res.redirect('/health');
-    });
-
-    this.healthServer = app.listen(this.env.HEALTH_CHECK_PORT, (): void => {
-      logger.info(`Health check server started on port ${this.env.HEALTH_CHECK_PORT}`);
     });
   }
 }

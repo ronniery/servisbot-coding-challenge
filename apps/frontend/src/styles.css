@@ -15,7 +15,7 @@ body {
   margin: 0;
 }
 
-/* --- Container e Header Principal --- */
+/* --- Main Container and Header --- */
 .viewer-container {
   max-width: 100%;
   margin: 0 auto;
@@ -31,10 +31,10 @@ body {
 
 .viewer-header h1 {
   color: var(--color-primary);
-  font-size: 1.5rem; /* Ajuste para celular */
+  font-size: 1.5rem; /* Mobile adjustment */
 }
 
-/* --- Estilos Gerais dos Cards (Bot/Worker) --- */
+/* --- General Card Styles (Bot/Worker) --- */
 .card {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -63,7 +63,7 @@ body {
   background-color: #f1f1f1;
 }
 
-/* --- Indicador de Status --- */
+/* --- Status Indicator --- */
 .status-indicator {
   width: 10px;
   height: 10px;
@@ -72,11 +72,11 @@ body {
   flex-shrink: 0;
 }
 
-.status-online { background-color: var(--color-success); }.status-error { background-color: var(--color-danger); }
+
 
 .header-info {
   flex-grow: 1;
-  min-width: 0; /* Permite que o texto seja truncado */
+  min-width: 0;
 }
 
 .header-info h3, .header-info h4 {
@@ -105,9 +105,9 @@ body {
   flex-shrink: 0;
 }
 
-/* --- Container de Conteúdo (Aninhamento) --- */
+/* --- Content Container (Nesting) --- */
 .card-content {
-  padding: 0; /* Remove padding externo para melhor alinhamento aninhado */
+  padding: 0; 
   border-top: 1px solid var(--color-border);
 }
 
@@ -115,15 +115,15 @@ body {
   padding: 10px;
 }
 
-/* --- Estilos Específicos do Nível Worker --- */
+/* --- Worker Level Specific Styles --- */
 .worker-card {
-  margin-top: 5px; /* Espaço menor entre workers */
+  margin-top: 5px;
   border: none;
   background-color: var(--color-background);
   box-shadow: none;
 }
 .worker-card .card-header {
-  padding-left: 10px; /* Recuo para aninhamento */
+  padding-left: 10px;
   background-color: #f1f1f1;
   border-radius: 4px;
 }
@@ -131,11 +131,14 @@ body {
     background-color: #e5e5e5;
 }
 
-/* --- Estilos da Lista de Logs --- */
+/* --- Log List Styles --- */
 .log-list-container {
-  padding: 10px 10px 10px 25px; /* Padding extra para recuo dos logs */
+  padding: 10px 10px 10px 25px;
   background-color: #f8f8f8;
   border-radius: 0 0 4px 4px;
+  max-height: 300px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
 }
 
 .log-entry {
@@ -162,20 +165,29 @@ body {
   color: #555;
 }
 
-.log-level-error { color: var(--color-danger); }
-.log-level-warn { color: orange; }
-.log-level-info { color: var(--color-success); }
+/* --- Loading and No Data Messages --- */
+.loading-message {
+  text-align: center;
+  color: var(--color-secondary);
+  padding: 20px;
+  font-style: italic;
+}
 
-.no-data,
+.no-data {
+  text-align: center;
+  color: var(--color-secondary);
+  padding: 15px;
+  font-size: 0.9rem;
+}
 
-/* --- Responsividade (Media Query para Telas Maiores) --- */
+/* --- Responsiveness (Media Query for Larger Screens) --- */
 @media (min-width: 768px) {
   .viewer-container {
     max-width: 700px;
     padding: 20px;
   }
   
-  .viewer-header h1 {
+  .viewer-header h2 {
     font-size: 2rem;
   }
 

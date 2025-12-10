@@ -1,19 +1,15 @@
-import { IsNotEmpty, IsNumber, validateSync } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, validateSync } from 'class-validator';
 
 import { logger } from '../utils/logger';
 
 export class Environment {
   @IsNumber()
+  @IsOptional()
   @IsNotEmpty()
-  API_PORT: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  HEALTH_CHECK_PORT: number;
+  API_PORT?: number = 3001;
 
   constructor(env: Record<string, any>) {
     this.API_PORT = Number(env.API_PORT);
-    this.HEALTH_CHECK_PORT = Number(env.HEALTH_CHECK_PORT);
   }
 
   validate() {

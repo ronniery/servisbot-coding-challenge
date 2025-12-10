@@ -1,6 +1,6 @@
 import { Application, type ApplicationConstructorParams } from './application';
 import { type Environment, getEnvironment } from './configuration';
-import { BotController, DocsController } from './controllers';
+import { BotController, DocsController, HealthController } from './controllers';
 import { BotModel, LogModel, WorkerModel } from './models';
 import { BotService } from './services';
 import { DataStore, logger } from './utils';
@@ -25,6 +25,7 @@ export async function createApp(): Promise<Application> {
   logger.debug('Initializing Controllers');
   const botController: BotController = new BotController({ service });
   const docsController: DocsController = new DocsController();
+  const healthController: HealthController = new HealthController();
 
   logger.debug('Creating Application instance');
   const params: ApplicationConstructorParams = {
@@ -32,6 +33,7 @@ export async function createApp(): Promise<Application> {
     datastore,
     botController,
     docsController,
+    healthController,
   };
 
   logger.info('Application initialization complete');

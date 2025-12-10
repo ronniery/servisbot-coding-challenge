@@ -17,7 +17,7 @@ export class BotController {
   private readonly router: ExpressRouter;
   private readonly service: BotService;
 
-  constructor(params: BotControllerParams) {
+  public constructor(params: BotControllerParams) {
     logger.debug('Initializing BotController');
     this.service = params.service;
     this.router = Router();

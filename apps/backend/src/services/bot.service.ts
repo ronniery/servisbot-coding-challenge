@@ -4,7 +4,7 @@ import { BotModel, WorkerModel } from '../models';
 import { logger, paginate } from '../utils';
 
 export class BotService {
-  constructor() {
+  public constructor() {
     logger.debug('Initializing BotService');
   }
 
