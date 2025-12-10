@@ -11,6 +11,7 @@
     "test:integration": "vitest run integration.test.ts",
     "test:coverage": "vitest run --coverage",
     "format:fix": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "build": "tsc --project tsconfig.build.json",
     "docker:build": "docker build -t backend -f Dockerfile ../.."

@@ -6,13 +6,13 @@ export class Environment {
   @IsNumber()
   @IsOptional()
   @IsNotEmpty()
-  API_PORT?: number = 3001;
+  public readonly API_PORT: number;
 
   constructor(env: Record<string, any>) {
-    this.API_PORT = Number(env.API_PORT);
+    this.API_PORT = env.API_PORT ? Number(env.API_PORT) : 3001;
   }
 
-  validate() {
+  public validate(): Environment {
     const errors = validateSync(this, { skipMissingProperties: true });
     if (errors.length > 0) {
       throw new Error(errors.toString());

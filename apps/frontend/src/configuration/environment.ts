@@ -6,7 +6,7 @@ export class Environment {
   API_BASE_URL: string;
 
   constructor(env: ImportMetaEnv) {
-    this.API_BASE_URL = env.VITE_API_BASE_URL;
+    this.API_BASE_URL = env.VITE_API_URL;
   }
 
   public validate(): Environment {
@@ -14,6 +14,7 @@ export class Environment {
     if (errors.length > 0) {
       throw new Error(errors.toString());
     }
+    
     return this;
   }
 }

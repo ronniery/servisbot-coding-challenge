@@ -7,4 +7,13 @@
   "typescript.inlayHints.parameterNames.enabled": "all",
   "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
   "explorer.fileNesting.enabled": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+
+    "generate.mjs": true
+  }
 }
