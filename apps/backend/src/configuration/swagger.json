@@ -12,6 +12,20 @@
     }
   ],
   "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Check if the application is running",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "503": {
+            "description": "Service Unavailable (during shutdown)"
+          }
+        }
+      }
+    },
     "/": {
       "get": {
         "summary": "Get all bots",

@@ -1,22 +1,20 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "composite": true,
     "rootDir": "./src",
-    "outDir": "./dist/apps",
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-    "noEmit": false
+    "outDir": "./dist",
+    "composite": true,
+    "tsBuildInfoFile": "./dist/tsconfig.build.tsbuildinfo"
   },
   "include": [
-    "src/**/*.{ts,js,json}",
-    "src/configuration/swagger.json"
+    "src/**/*",
+    "src/**/*.json"
   ],
   "exclude": [
+    "node_modules",
+    "dist",
     "**/*.test.ts",
     "**/*.spec.ts",
-    "tests/**/*"
+    "tests"
   ]
 }
