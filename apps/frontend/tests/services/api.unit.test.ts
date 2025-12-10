@@ -1,11 +1,16 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+
+vi.mock('@/configuration', () => ({
+  getEnvironment: () => ({
+    API_BASE_URL: 'http://mock-api.test',
+  }),
+}));
 
 import { apiClient } from '@/services/api';
 
 describe('API Service', () => {
   it('should be structured correctly', () => {
-    // Useless right? Maybe...
     expect(apiClient).toBeDefined();
-    expect(apiClient.defaults.baseURL).toBe('http://localhost:3001');
+    expect(apiClient.defaults.baseURL).toBe('http://mock-api.test');
   });
 });
