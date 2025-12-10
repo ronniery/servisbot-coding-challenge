@@ -1,8 +1,10 @@
 import '@testing-library/jest-dom';
 import { afterEach } from 'vitest';
 import { cleanup } from '@testing-library/react';
+import { EventEmitter } from 'node:events';
 
-// Runs a cleanup after each test case (e.g. clearing jsdom)
+EventEmitter.setMaxListeners(40);
+
 afterEach(() => {
   cleanup();
 });

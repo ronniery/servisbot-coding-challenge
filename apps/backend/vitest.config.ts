@@ -8,6 +8,7 @@ export default defineConfig({
     typecheck: {
       tsconfig: './tsconfig.test.json',
     },
+    setupFiles: ['./tests/test-setup.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'json-summary', 'lcov'],
