@@ -9,6 +9,7 @@ NC='\033[0m' # No Color
 
 TEMP_DIR=$(mktemp -d)
 CURRENT_DIR=$(pwd)
+CLEANUP_PLAYWRIGHT=false
 
 # Cleanup function
 cleanup() {
@@ -17,13 +18,19 @@ cleanup() {
   if [ -d "$TEMP_DIR" ]; then
     echo "Removing temporary directory $TEMP_DIR..."
     
-    if [ -f "$TEMP_DIR/docker-compose.yml" ]; then
+    if [ -f "$TEMP_DIR/docker-compose.yml" ] && command -v docker &> /dev/null; then
           echo "Stopping Docker containers..."
           (cd "$TEMP_DIR" && docker compose down -v || true)
     fi
 
     rm -rf "$TEMP_DIR"
     echo -e "${GREEN}Cleanup complete.${NC}"
+  fi
+
+  if [ "$CLEANUP_PLAYWRIGHT" = "true" ]; then
+    echo -e "${YELLOW}Removing globally installed Playwright...${NC}"
+    npm uninstall -g playwright
+    echo -e "${GREEN}Global Playwright removed.${NC}"
   fi
 }
 
@@ -44,9 +51,14 @@ if ! command -v npm &> /dev/null; then
   exit 1
 fi
 
-# 1. Checkout Code
-echo -e "\n${YELLOW}[1/5] Checking out code...${NC}"
-echo "Creating temporary workspace: $TEMP_DIR"
+# Check for Playwright
+if ! command -v playwright &> /dev/null; then
+  echo -e "${YELLOW}Playwright not found globally. Installing...${NC}"
+  npm install -g playwright
+  CLEANUP_PLAYWRIGHT=true
+else
+  echo -e "${GREEN}Playwright is already installed globally.${NC}"
+fi
 
 # 1. Checkout Code
 echo -e "\n${YELLOW}[1/5] Checking out code...${NC}"
@@ -125,7 +137,7 @@ fi
 echo ">> Frontend E2E Tests (Integration)..."
 # Ensure Playwright browsers are installed
 echo "Ensuring Playwright browsers are installed..."
-npx playwright install
+playwright install
 
 if npm run test:e2e --prefix apps/frontend; then
     echo -e "${GREEN}✓ Frontend E2E Tests Passed${NC}"
@@ -148,6 +160,5 @@ else
     echo "Press Ctrl+C to stop and cleanup."
     npm run start:dev
 fi
-
 
 exit 0
