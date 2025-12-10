@@ -26,9 +26,8 @@ describe('application.unit', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Mock process.exit to prevent tests from actually exiting
     processExitSpy = vi.spyOn(process, 'exit').mockImplementation((() => { }) as any);
-    processOnSpy = vi.spyOn(process, 'on');
+    processOnSpy = vi.spyOn(process, 'on').mockImplementation(() => process);
 
     mockEnv = {
       API_PORT: 9999,
@@ -51,7 +50,10 @@ describe('application.unit', () => {
       env: mockEnv,
       datastore: mockDataStore,
       botController: mockController,
-      healthController: {} as any,
+      healthController: {
+        setShuttingDown: vi.fn(),
+        getRouter: vi.fn(),
+      } as any,
       docsController: {} as any, // We don't care about the docs controller
     });
   });
@@ -59,6 +61,8 @@ describe('application.unit', () => {
   afterEach(() => {
     processExitSpy.mockRestore();
     processOnSpy.mockRestore();
+
+    vi.restoreAllMocks();
   });
 
   describe('constructor', () => {
