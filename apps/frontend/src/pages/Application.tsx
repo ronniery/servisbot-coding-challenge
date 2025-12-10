@@ -1,47 +1,53 @@
-import React, { Fragment } from "react";
+import { Fragment, useCallback } from "react";
 
 import type { Bot } from "@packages/shared";
 
-import { BotService } from "../services/bot.service";
 import { BotCard } from "../components/BotCard";
 import { useAccordion } from "../hooks/useAccordion";
 import { usePagination } from "../hooks/usePagination";
+import { BotService } from "../services/bot.service";
+
 import "../styles.css";
 
-export const Application: React.FC = () => {
+export const Application = (): React.ReactElement => {
+  const fetchBots = useCallback(
+    (page: number) => BotService.getBots({ page, limit: 10 }),
+    [],
+  );
+
   const {
     items: bots,
     hasMore,
     isLoading,
-    loadMore,
-  } = usePagination<Bot>((page) => BotService.getBots({ page, limit: 10 }));
+    loadNext,
+  } = usePagination<Bot>(fetchBots);
 
   const { toggle: toggleBotAccordion, isExpanded: isBotExpanded } =
     useAccordion();
+
   const {
     expandedId: expandedWorkerId,
     toggle: toggleWorkerAccordion,
     reset: resetWorkers,
   } = useAccordion();
 
-  const handleLoadMore = () => {
-    loadMore();
+  const handleLoadMore = (): void => {
+    loadNext();
   };
 
-  const toggleBot = (botId: string) => {
+  const toggleBot = (botId: string): void => {
     resetWorkers();
     toggleBotAccordion(botId);
   };
 
-  const toggleWorker = (workerId: string) => {
+  const toggleWorker = (workerId: string): void => {
     toggleWorkerAccordion(workerId);
   };
 
   return (
     <div className="viewer-container">
       <header className="viewer-header">
-        <h1>⚙️ Bot Management</h1>
-        <p>Real-time service hierarchy.</p>
+        <h2>Bot Management</h2>
       </header>
 
       <div className="bot-list">

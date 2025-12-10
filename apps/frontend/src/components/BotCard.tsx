@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { Fragment, useCallback } from "react";
 
-import { BotStatus, type Bot, type Worker } from "@packages/shared";
+import { type Bot, BotStatus, type Worker } from "@packages/shared";
 
+import { usePagination } from "../hooks/usePagination";
 import { BotService } from "../services/bot.service";
 import { WorkerCard } from "./WorkerCard";
+
 type BadgeProps = {
   status: BotStatus;
 };
 
-const Badge: React.FC<BadgeProps> = ({ status }) => {
+const Badge = ({ status }: BadgeProps): React.ReactElement => {
   let className = "status-badge";
 
   if (status === BotStatus.ENABLED) {
@@ -22,7 +24,7 @@ const Badge: React.FC<BadgeProps> = ({ status }) => {
   return <span className={className}>{status}</span>;
 };
 
-type BotCardProps = {
+export type BotCardProps = {
   bot: Bot;
   isExpanded: boolean;
   onToggle: (botId: string) => void;
@@ -30,41 +32,30 @@ type BotCardProps = {
   toggleWorker: (workerId: string) => void;
 };
 
-export const BotCard: React.FC<BotCardProps> = ({
+export const BotCard = ({
   bot,
   isExpanded,
   onToggle,
   expandedWorkerId,
   toggleWorker,
-}) => {
-  const [workers, setWorkers] = useState<Worker[]>([]);
-  const [isLoadingWorkers, setIsLoadingWorkers] = useState(false);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
+}: BotCardProps): React.ReactElement => {
+  const resolveWorkers = useCallback(
+    (page: number) => BotService.getWorkers(bot.id, { page, limit: 10 }),
+    [bot.id],
+  );
 
-  useEffect(() => {
-    if (isExpanded && workers.length === 0) {
-      loadWorkers(1, true);
-    }
-  }, [isExpanded]);
+  const {
+    items: workers,
+    isPageEmpty,
+    hasMore,
+    isLoading,
+    loadNext,
+  } = usePagination<Worker>(resolveWorkers);
 
-  const loadWorkers = (pageToLoad: number, reset: boolean = false) => {
-    setIsLoadingWorkers(true);
-    BotService.getWorkers(bot.id, { page: pageToLoad, limit: 10 }).then(
-      (response) => {
-        setWorkers((prev) =>
-          reset ? response.data : [...prev, ...response.data],
-        );
-        setHasMore(response.pagination.hasNext);
-        setPage(pageToLoad);
-        setIsLoadingWorkers(false);
-      },
-    );
-  };
-
-  const handleLoadMore = (e: React.MouseEvent) => {
+  const handleLoadMore = (e: React.MouseEvent): void => {
     e.stopPropagation(); // Prevent toggling accordion
-    loadWorkers(page + 1);
+
+    loadNext();
   };
 
   return (
@@ -76,17 +67,17 @@ export const BotCard: React.FC<BotCardProps> = ({
           <p className="subtitle">ID: {bot.id}</p>
         </div>
         <span className="worker-count">
-          {workers.length > 0 ? `${workers.length}+ Workers` : ""}
+          {isPageEmpty ? "" : `${workers.length}+ Workers`}
         </span>
         <span className="toggle-icon">{isExpanded ? "▲" : "▼"}</span>
       </div>
 
       {isExpanded && (
         <div className="card-content worker-list-container">
-          {workers.length === 0 && !isLoadingWorkers ? (
+          {isPageEmpty && !isLoading ? (
             <p className="no-data">No Workers found for this Bot.</p>
           ) : (
-            <>
+            <Fragment>
               {workers.map((worker) => (
                 <WorkerCard
                   key={worker.id}
@@ -97,16 +88,16 @@ export const BotCard: React.FC<BotCardProps> = ({
                 />
               ))}
 
-              {isLoadingWorkers && (
+              {isLoading && (
                 <p className="loading-message">Loading Workers...</p>
               )}
 
-              {!isLoadingWorkers && hasMore && (
+              {!isLoading && hasMore && (
                 <button className="load-more-btn" onClick={handleLoadMore}>
                   Load More Workers
                 </button>
               )}
-            </>
+            </Fragment>
           )}
         </div>
       )}

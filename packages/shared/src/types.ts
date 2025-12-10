@@ -4,7 +4,7 @@ export enum BotStatus {
   PAUSED = 'PAUSED',
 }
 
-export interface Bot {
+export type Bot = {
   readonly id: string;
   readonly created: number;
   name: string;
@@ -12,7 +12,7 @@ export interface Bot {
   description: string;
 }
 
-export interface Log {
+export type Log = {
   readonly id: string;
   readonly created: number;
   readonly bot: string;
@@ -21,7 +21,7 @@ export interface Log {
   botId: string;
 }
 
-export interface Worker {
+export type Worker = {
   readonly id: string;
   readonly created: number;
   readonly bot: string;

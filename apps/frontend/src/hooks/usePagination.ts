@@ -11,44 +11,39 @@ export type PaginatedFetcher<TData> = (
   page: number,
 ) => Promise<PaginatedResponse<TData>>;
 
-export type UsePaginatedListOptions = {
-  /**
-   * If false, the hook will NOT auto-load the first page.
-   * Useful for accordions (load only when expanded).
-   */
+export type UsePaginationOptions = {
   enabled?: boolean;
 };
 
-export type UsePaginatedListReturn<TData> = {
+export type UsePagination<TData> = {
   items: TData[];
-  page: number;
   hasMore: boolean;
   isLoading: boolean;
-  loadFirstPage: () => void;
-  loadMore: () => void;
-  reset: () => void;
+  isPageEmpty: boolean;
+  loadNext: () => void;
 };
 
 export function usePagination<TData>(
   fetchPage: PaginatedFetcher<TData>,
-  { enabled = true }: UsePaginatedListOptions = {},
-): UsePaginatedListReturn<TData> {
+): UsePagination<TData> {
   const [items, setItems] = useState<TData[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const isPageEmpty = items.length === 0;
+
   const load = useCallback(
-    (pageToLoad: number, reset: boolean = false) => {
+    (nextPage: number, reset: boolean = false): void => {
       setIsLoading(true);
 
-      fetchPage(pageToLoad)
+      fetchPage(nextPage)
         .then((response) => {
           setItems((prev) =>
             reset ? response.data : [...prev, ...response.data],
           );
           setHasMore(response.pagination.hasNext);
-          setPage(pageToLoad);
+          setPage(nextPage);
         })
         .finally(() => {
           setIsLoading(false);
@@ -57,35 +52,26 @@ export function usePagination<TData>(
     [fetchPage],
   );
 
-  const loadFirstPage = useCallback(() => {
+  const loadFirstPage = useCallback((): void => {
     load(1, true);
   }, [load]);
 
-  const loadMore = useCallback(() => {
+  const loadNext = useCallback((): void => {
     load(page + 1);
   }, [load, page]);
 
-  const reset = useCallback(() => {
-    setItems([]);
-    setPage(1);
-    setHasMore(false);
-  }, []);
-
   useEffect(() => {
-    // Auto-load first page if enabled and nothing loaded yet
-    if (!enabled) return;
     if (items.length > 0) return;
 
+    // eslint-disable-next-line
     loadFirstPage();
-  }, [enabled, items.length, loadFirstPage]);
+  }, [items.length, loadFirstPage]);
 
   return {
     items,
-    page,
+    isPageEmpty,
     hasMore,
     isLoading,
-    loadFirstPage,
-    loadMore,
-    reset,
+    loadNext,
   };
 }

@@ -1,9 +1,9 @@
 import type {
   Bot,
-  Worker,
   Log,
   PaginatedResponse,
   PaginationParams,
+  Worker,
 } from "@packages/shared";
 
 import { apiClient } from "./api";
@@ -13,7 +13,7 @@ export class BotService {
     page = 1,
     limit = 10,
   }: PaginationParams = {}): Promise<PaginatedResponse<Bot>> {
-    const response = await apiClient.get<PaginatedResponse<Bot>>("/", {
+    const response = await apiClient.get<PaginatedResponse<Bot>>("/bots", {
       params: { page, limit },
     });
 
@@ -25,7 +25,7 @@ export class BotService {
     { page = 1, limit = 10 }: PaginationParams = {},
   ): Promise<PaginatedResponse<Worker>> {
     const response = await apiClient.get<PaginatedResponse<Worker>>(
-      `/${botId}/workers`,
+      `/bots/${botId}/workers`,
       { params: { page, limit } },
     );
 
@@ -38,7 +38,7 @@ export class BotService {
     { page = 1, limit = 10 }: PaginationParams = {},
   ): Promise<PaginatedResponse<Log>> {
     const response = await apiClient.get<PaginatedResponse<Log>>(
-      `/${botId}/workers/${workerId}/logs`,
+      `/bots/${botId}/workers/${workerId}/logs`,
       { params: { page, limit } },
     );
 

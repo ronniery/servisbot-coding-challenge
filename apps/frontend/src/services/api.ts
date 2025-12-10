@@ -1,10 +1,10 @@
 import Axios from "axios";
 import { setupCache } from "axios-cache-interceptor";
 
-const API_BASE_URL = "http://localhost:3000";
+import { getEnvironment } from '../configuration';
 
 const instance = Axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: getEnvironment().API_BASE_URL,
 });
 
 export const apiClient = setupCache(instance, {

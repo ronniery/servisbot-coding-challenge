@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Fragment, useCallback, useEffect, useRef } from "react";
 
-import type { Worker, Log } from "@packages/shared";
+import type { Log, Worker } from "@packages/shared";
 
-import { BotService } from "../services/bot.service";
 import { usePagination } from "../hooks/usePagination";
+import { BotService } from "../services/bot.service";
 import { LogList } from "./LogList";
 
 type WorkerCardProps = {
@@ -13,25 +13,40 @@ type WorkerCardProps = {
   onToggle: (workerId: string) => void;
 };
 
-export const WorkerCard: React.FC<WorkerCardProps> = ({
+export const WorkerCard = ({
   botId,
   worker,
   isExpanded,
   onToggle,
-}) => {
-  const {
-    items: logs,
-    hasMore,
-    isLoading,
-    loadMore,
-  } = usePagination<Log>(
-    (page) => BotService.getLogs(botId, worker.id, { page, limit: 10 }),
-    { enabled: isExpanded },
+}: WorkerCardProps): React.ReactElement => {
+  const workerLogsRef = useRef<HTMLDivElement>(null);
+
+  const fetchLogs = useCallback(
+    (page: number) => BotService.getLogs(botId, worker.id, { page, limit: 10 }),
+    [botId, worker.id],
   );
 
-  const handleLoadMore = (e: React.MouseEvent) => {
+  const {
+    items: logs,
+    isPageEmpty,
+    hasMore,
+    isLoading,
+    loadNext,
+  } = usePagination<Log>(fetchLogs);
+
+  useEffect(() => {
+    if (workerLogsRef.current) {
+      workerLogsRef.current.scrollTo({
+        top: workerLogsRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [logs.length]);
+
+  const handleLoadMore = (e: React.MouseEvent): void => {
     e.stopPropagation();
-    loadMore();
+
+    loadNext();
   };
 
   return (
@@ -46,18 +61,18 @@ export const WorkerCard: React.FC<WorkerCardProps> = ({
           </p>
         </div>
         <span className="log-count">
-          {logs.length > 0 ? `${logs.length}+ Logs` : ""}
+          {isPageEmpty ? "" : `${logs.length}+ Logs`}
         </span>
         <span className="toggle-icon">{isExpanded ? "▲" : "▼"}</span>
       </div>
 
       {isExpanded && (
         <div className="card-content">
-          {logs.length === 0 && !isLoading ? (
+          {isPageEmpty && !isLoading ? (
             <p className="no-data">No Logs found.</p>
           ) : (
-            <>
-              <LogList logs={logs} />
+            <Fragment>
+              <LogList logs={logs} ref={workerLogsRef} />
 
               {isLoading && <p className="loading-message">Loading Logs...</p>}
 
@@ -66,7 +81,7 @@ export const WorkerCard: React.FC<WorkerCardProps> = ({
                   Load More Logs
                 </button>
               )}
-            </>
+            </Fragment>
           )}
         </div>
       )}
